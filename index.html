@@ -9,13 +9,17 @@
         <a href="games.html">My games:</a>
         <a href="goofyahhclock.html">A clock</a>
         <a href="Fake buisness.html">A fake buisness I made</a>
-        <a href="index.html">buttons</a>
+        <a href="homepage.html">buttons</a>
         <a href="Creatures.html">Fake Store</a>
 
 
         </div>
     
-        <h1> Welcome to my cringy website! Over here, you will find my other cringy websites I have made in the past. (I know it is trash but I'm pretty young bro) </h1> 
+        <h1> Welcome to my cringy website! Over here, you will find my other cringy websites I have made in the past. (I know it is not very good but I'm pretty young bro) </h1> 
+
+        <audio src = "./Audio/meme.mp3">  </audio>
+
+        
 
         
 
@@ -26,6 +30,17 @@
     </body>
 
 </html>
+
+<script> 
+
+    const meme = new Audio("./Audio/meme.mp3");
+    meme.loop = true;
+        window.addEventListener("mousemove",()=>{
+        meme.play();
+    }
+    )
+
+</script>
 
 <style> 
 
@@ -54,14 +69,18 @@
         padding: 2px 0;
         font-family: billybob;
         background-color: rgb(174, 0, 255);
+
     }
 
     h1 {
 
+        padding-top: 200px;
         text-align: center;
         font-family: billybob;
         color: rgb(255, 255, 255);
         text-shadow: 5px 5px 0px #353535;;
+        padding-left: 300px;
+        padding-right: 300px;
 
     }
 
