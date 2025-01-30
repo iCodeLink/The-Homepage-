@@ -1,0 +1,91 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="anothercss.css">
+        <title>HANGMAN IS STUPID</title>
+    </head>
+     <body>
+            <h1 id="bowd"> </h1>
+        <img src ="stick1.png"id ="billy bowb">
+
+        <div class="form">
+            <label for="guessField">Enter a guess: </label>
+            <input type="text" id="guessField" class="guessField">
+            <input type="submit" value="Submit guess" class="guessSubmit" id="submitguess">
+        </div>
+    
+
+        <h1>WIN FOR $1000000000000000000000000</h1> 
+        <script>
+            var words = ["banana","bob","monkey","water","fire","air","brainrot","billy","jeff","emoji","man","stick","pop","woody","buzz","dipper","mabel","drop","fart","mcstinklestein","die","help","death","L","roblox", "minecraft", "mario", "amogus", "Fu**"];
+
+            var word = words[Math.floor(Math.random() * words.length)];
+            alert(words.join(" "));
+
+            var answerArray = [];
+            for(var i = 0; i < word.length; i++) {
+                answerArray[i] = "_";
+            }
+
+            document.getElementById("bowd").innerHTML = answerArray;
+
+            var remainingLetters = word.length;
+            var lives = 5
+            var foundLetter = false;
+            
+
+            document.getElementById("submitguess").onclick = function () {
+                var guess = document.getElementById("guessField").value; 
+               if (lives == 0) {
+                return;
+               }
+                foundLetter = false;
+                if(guess == null) {
+                    alert(("its nothing you idiot put something in for crying out loud yo mamas so fat that thanos had to snap twice"));
+                    return;
+                }
+                else if(guess.length > 1) {
+                    alert(("only guess one letter at a time"));
+                    return;
+                }
+                else {
+                    guess.toLowerCase();
+                    for(var i = 0; i < word.length; i++) {
+                        if(word[i] == guess) {
+                            answerArray[i] = guess;
+                            foundLetter = true;
+                            remainingLetters--;
+                        }
+                    }
+                }
+                document.getElementById("bowd").innerHTML = answerArray;
+                if (remainingLetters == 0) {
+                    alert(("noice you survived and the word was: " + word));
+                    return;
+                }
+                if (foundLetter == false) {
+                    lives --;
+                    if (lives == 4) {
+                        document.getElementById("billy bowb").src = "stick1.png";
+                    }
+                    if (lives == 3) {
+                        document.getElementById("billy bowb").src = "stick2.png";
+                    }
+                    if (lives == 2) {
+                        document.getElementById("billy bowb").src = "stick3.png";
+                    }
+                    if (lives == 1) {
+                        document.getElementById("billy bowb").src = "stick4.png";
+                    }
+                    if (lives == 0) {
+                        document.getElementById("billy bowb").src = "stick5.png";
+                        alert(("L + ratio bozo ur dum you died and the word was " + word + "you idiot. THANK YOU FOR PLAYING JOEY GAME"));
+                    }
+                    
+                }
+                  
+                 
+            
+            }
+        </script>
+    </body>
+</html>

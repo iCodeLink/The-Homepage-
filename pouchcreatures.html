@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pokémon Adventure Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .game-container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .story {
+      font-size: 18px;
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 18px;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .result {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .correct {
+      color: green;
+    }
+
+    .incorrect {
+      color: red;
+    }
+
+    .pokemon-stats {
+      font-size: 16px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pokémon Adventure Game</h1>
+  <div class="game-container">
+    <div class="story" id="story">Welcome to the Pokémon Adventure Game! Your journey begins now...</div>
+    <button onclick="startGame()">Start Game</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const starterPokemons = [
+      { name: 'Bulbasaur', health: 30, attack: 10, speed: 5 },
+      { name: 'Charmander', health: 30, attack: 12, speed: 8 },
+      { name: 'Squirtle', health: 30, attack: 8, speed: 6 }
+    ];
+
+    const wildPokemons = [
+      { name: 'Pikachu', health: 20, attack: 10, speed: 9 },
+      { name: 'Rattata', health: 15, attack: 6, speed: 8 },
+      { name: 'Zubat', health: 18, attack: 7, speed: 10 },
+      { name: 'Magikarp', health: 10, attack: 5, speed: 4 }
+    ];
+
+    const trainerPokemons = [
+      { name: 'Onix', health: 40, attack: 15, speed: 4 },
+      { name: 'Geodude', health: 30, attack: 10, speed: 5 },
+      { name: 'Nidoran♀', health: 25, attack: 12, speed: 6 },
+      { name: 'Nidoran♂', health: 25, attack: 12, speed: 6 }
+    ];
+
+    const wildHuman = { name: 'Trainer Red', pokemon: 'Pidgeot', health: 40 };
+
+    let playerHealth = 100;
+    let playerPokemon = {};
+    let playerPokemonHealth = 30;
+    let gameStage = 0;
+    let wildPokemon = {};
+    let wildPokemonHealth = 20;
+    let battleStage = false;
+
+    // Start the game
+    function startGame() {
+      gameStage = 1;
+      playerHealth = 100;
+      playerPokemonHealth = 30;
+      document.getElementById('story').textContent = "Welcome to the world of Pokémon! Choose your starter Pokémon:";
+      updateChoices(['Bulbasaur', 'Charmander', 'Squirtle']);
+    }
+
+    // Choose Starter Pokémon
+    function chooseStarter(pokemonName) {
+      playerPokemon = starterPokemons.find(pokemon => pokemon.name === pokemonName);
+      playerPokemonHealth = playerPokemon.health; // Set health based on chosen Pokémon
+      gameStage = 2;
+      document.getElementById('story').textContent = `You chose ${pokemonName}! Here are its stats:\nHealth: ${playerPokemon.health}\nAttack: ${playerPokemon.attack}\nSpeed: ${playerPokemon.speed}`;
+      displayStats(playerPokemon);
+      updateChoices(['Explore the wild', 'Rest']);
+    }
+
+    // Display Pokémon stats
+    function displayStats(pokemon) {
+      let statsHtml = `<div class="pokemon-stats" id="pokemon-stats">
+                         <strong>${pokemon.name} Stats:</strong><br>
+                         Health: ${pokemon.health}<br>
+                         Attack: ${pokemon.attack}<br>
+                         Speed: ${pokemon.speed}
+                       </div>`;
+      document.querySelector('.game-container').insertAdjacentHTML('beforeend', statsHtml);
+    }
+
+    // Clear All Stats
+    function clearAllStats() {
+      const statsElement = document.getElementById('pokemon-stats');
+      if (statsElement) {
+        statsElement.remove();
+      }
+    }
+
+    // Display choices and remove old buttons
+    function updateChoices(options) {
+      // Clear existing buttons first
+      const buttons = document.querySelectorAll('.game-container button');
+      buttons.forEach(button => button.remove());
+
+      let buttonsHtml = '';
+      options.forEach(option => {
+        buttonsHtml += `<button onclick="makeChoice('${option}')">${option}</button>`;
+      });
+
+      document.querySelector('.game-container').insertAdjacentHTML('beforeend', buttonsHtml);
+    }
+
+    // Handle making a choice (either Explore, Rest, Fight or Run)
+    function makeChoice(choice) {
+      if (gameStage === 1) {
+        if (starterPokemons.some(pokemon => pokemon.name === choice)) {
+          chooseStarter(choice);
+        }
+      } else if (gameStage === 2) {
+        if (choice === 'Explore the wild') {
+          exploreWild();
+        } else if (choice === 'Rest') {
+          rest();
+        }
+      } else if (battleStage && choice === 'Fight') {
+        battleOutcome('fight');
+      } else if (battleStage && choice === 'Run') {
+        runFromBattle();
+      } else if (battleStage && choice === 'Guard') {
+        guard();
+      }
+    }
+
+    // Explore the wild
+    function exploreWild() {
+      gameStage = 3;  // Proceed to the encounter stage
+      clearAllStats();  // Clear stats for all Pokémon when continuing the adventure
+      const randomChance = Math.random();
+
+      if (randomChance < 0.05) { // 5% chance for a wild human encounter
+        encounterWildHuman();
+      } else if (randomChance < 0.3) { // 30% chance for wild Pokémon
+        encounterWildPokemon();
+      } else { // 65% chance for trainer battle
+        encounterTrainer();
+      }
+    }
+
+    // Rest to heal
+    function rest() {
+      playerHealth = Math.min(playerHealth + 20, 100); // Heal 20 points, max 100 health
+      document.getElementById('story').textContent = `You rested and healed your Pokémon. Your health is now ${playerHealth}.`;
+      setTimeout(() => {
+        clearAllStats();  // Clear stats when continuing the adventure
+        updateChoices(['Explore the wild', 'Rest']);
+      }, 1500);
+    }
+
+    // Encounter wild Pokémon
+    function encounterWildPokemon() {
+      wildPokemon = wildPokemons[Math.floor(Math.random() * wildPokemons.length)];
+      wildPokemonHealth = wildPokemon.health;
+      document.getElementById('story').textContent = `A wild ${wildPokemon.name} appears! Its stats are:\nHealth: ${wildPokemon.health}\nAttack: ${wildPokemon.attack}\nSpeed: ${wildPokemon.speed}`;
+      displayStats(wildPokemon);
+      battleStage = true;
+      updateChoices(['Fight', 'Run', 'Guard']);
+    }
+
+    // Encounter a wild human
+    function encounterWildHuman() {
+      document.getElementById('story').textContent = `A wild human, Trainer Red, challenges you to a battle! Get ready for a tough battle!`;
+      wildPokemon = { name: wildHuman.pokemon, health: wildHuman.health, attack: 15, speed: 10 }; // Example stats for Trainer Red's Pokémon
+      displayStats(wildPokemon);
+      battleStage = true;
+      updateChoices(['Fight', 'Run', 'Guard']);
+    }
+
+    // Encounter a trainer battle
+    function encounterTrainer() {
+      const trainerPokemon = trainerPokemons[Math.floor(Math.random() * trainerPokemons.length)];
+      wildPokemon = trainerPokemon;
+      document.getElementById('story').textContent = `A trainer challenges you to a battle! Their Pokémon is ${wildPokemon.name}.`;
+      displayStats(wildPokemon);
+      battleStage = true;
+      updateChoices(['Fight', 'Run', 'Guard']);
+    }
+
+    // Battle outcome (fight option)
+    function battleOutcome(action) {
+      if (action === 'fight') {
+        const playerDamage = Math.max(0, playerPokemon.attack - wildPokemon.speed); // Damage based on attack vs speed
+        const wildDamage = Math.max(0, wildPokemon.attack - playerPokemon.speed); // Wild Pokémon damage
+
+        wildPokemonHealth -= playerDamage;
+        playerHealth -= wildDamage;
+
+        document.getElementById('story').textContent = `You dealt ${playerDamage} damage! Wild Pokémon dealt ${wildDamage} damage!`;
+
+        if (wildPokemonHealth <= 0) {
+          document.getElementById('story').textContent += `\nYou defeated the wild ${wildPokemon.name}!`;
+          setTimeout(() => {
+            clearAllStats();  // Clear stats when continuing the adventure
+            updateChoices(['Explore the wild', 'Rest']);
+          }, 1500);
+        } else if (playerHealth <= 0) {
+          document.getElementById('story').textContent += `\nYou fainted! Game over.`;
+          gameOver();
+        } else {
+          updateChoices(['Fight', 'Run', 'Guard']);
+        }
+      }
+    }
+
+    // Guard action to reduce damage
+    function guard() {
+      const guardEffect = 5; // Reduce damage taken
+      wildPokemonHealth -= Math.max(0, playerPokemon.attack - wildPokemon.speed); // Player still damages wild Pokémon
+      playerHealth += guardEffect; // Healing when guarding
+
+      document.getElementById('story').textContent = `You guarded and took less damage! Your health is now ${playerHealth}.`;
+
+      if (wildPokemonHealth <= 0) {
+        document.getElementById('story').textContent += `\nYou defeated the wild ${wildPokemon.name}!`;
+        setTimeout(() => {
+          clearAllStats();  // Clear stats when continuing the adventure
+          updateChoices(['Explore the wild', 'Rest']);
+        }, 1500);
+      } else {
+        updateChoices(['Fight', 'Run', 'Guard']);
+      }
+    }
+
+    // Run from battle
+    function runFromBattle() {
+      document.getElementById('story').textContent = `You ran away from the battle.`;
+      setTimeout(() => {
+        clearAllStats();  // Clear stats when continuing the adventure
+        updateChoices(['Explore the wild', 'Rest']);
+      }, 1500);
+    }
+
+    // End the game if player loses
+    function gameOver() {
+      document.getElementById('story').innerHTML = "Game Over! Would you like to try again?";
+      const restartButton = '<button onclick="startGame()">Restart</button>';
+      document.querySelector('.game-container').innerHTML += restartButton;
+    }
+  </script>
+</body>
+</html>

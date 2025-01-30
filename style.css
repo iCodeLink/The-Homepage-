@@ -1,0 +1,24 @@
+h2 {
+    font-family: cursive;
+}
+
+body{
+    background-image: url("me.png")
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-size: xx-large;
+    background-color: darkgray;
+
+}
+
+ul {
+   border: 1px solid black;
+    border-collapse: collapse;
+    font-size: xx-large;
+    background-color: darkgray;
+ 
+}
+    
