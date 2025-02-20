@@ -4,19 +4,21 @@
         <title>HANGMAN IS STUPID</title>
     </head>
      <body>
+
             <h1 id="bowd"> </h1>
+            <div class="form">
+                <label for="guessField">Enter a guess: </label>
+                <input type="text" id="guessField" class="guessField">
+                <input type="submit" value="Submit guess" class="guessSubmit" id="submitguess">
+            </div>
         <img src ="stick1.png"id ="billy bowb">
 
-        <div class="form">
-            <label for="guessField">Enter a guess: </label>
-            <input type="text" id="guessField" class="guessField">
-            <input type="submit" value="Submit guess" class="guessSubmit" id="submitguess">
-        </div>
+       
     
 
         <h1>WIN FOR $1000000000000000000000000</h1> 
         <script>
-            var words = ["banana","bob","monkey","water","fire","air","brainrot","billy","jeff","emoji","man","stick","pop","woody","buzz","dipper","mabel","drop","fart","mcstinklestein","die","help","death","L","roblox", "minecraft", "mario", "amogus", "Fu**"];
+            var words = ["banana","bob","monkey","water","fire","air","brainrot","billy","jeff","emoji","man","stick","pop","woody","buzz","dipper","mabel","drop","fart","mcstinklestein","die","help","death","L","roblox", "minecraft", "mario", "amogus", "Fu**", "ninja", "Poop", "Daniel", ];
 
             var word = words[Math.floor(Math.random() * words.length)];
             alert(words.join(" "));

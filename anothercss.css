@@ -74,6 +74,10 @@ ul {
 
 }
 
+body {
+    background-color: aqua;
+}
+
     @keyframes billybob{
         0% {background-color: rgb(0, 255, 42); left: 0px; top: 0px;}
         25% {background-color: cyan; left: 1423px; top: 0px; ;}
